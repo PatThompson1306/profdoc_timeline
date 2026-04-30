@@ -4,7 +4,7 @@ import sqlite3
 from pathlib import Path
 
 # database path to deploy the db to the backend folder
-DB_PATH = Path(__file__).parent / "app.db"
+DB_PATH = Path(__file__).parent / "workloads.db"
 
 # funcction to connect to the database 
 # creates a connection to the SQLite database using the specified path

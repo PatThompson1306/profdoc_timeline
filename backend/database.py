@@ -1,3 +1,5 @@
+# .gitignore file to ignore the app.db file which is the SQLite database used in the project
+
 import sqlite3
 from pathlib import Path
 
@@ -38,3 +40,4 @@ def create_table():
     table_conn.close()
 
 create_table()
+

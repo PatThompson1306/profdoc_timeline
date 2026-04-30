@@ -7,7 +7,7 @@ from fastapi.responses import FileResponse
 app = FastAPI()
 app.mount("/frontend", StaticFiles(directory = "../frontend"), name = "frontend")
 
-# define the root endpoint to serve the index.html file
+# function defining the root endpoint to serve the index.html file
 @app.get("/")
 def root():
     return FileResponse("../frontend/index.html")

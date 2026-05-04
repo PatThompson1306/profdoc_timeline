@@ -1,5 +1,5 @@
-// global variable to store the selected workload id
-let selectedWorkloadId = null;
+let selectedWorkloadId = null; // global variable to store the selected workload id
+let workLoadCache = {}; // global variable to cache workload data for quick access when populating the form
 
 function transformToGantt(workload) {
   // function to transform workload data frappe gantt chart formatted json
@@ -10,20 +10,6 @@ function transformToGantt(workload) {
     end: workload.end_date,
     progress: 0,
   };
-}
-
-function loadWorkLoads() {
-  // function to fetch workload data from backend and transform it to Gantt chart formatted json
-  // calls the transformToGantt function for each workload and returns an array of Gantt chart formatted json
-  fetch("http://localhost:8000/workloads/")
-    .then((response) => response.json())
-    .then((data) => {
-      const ganttData = data.map(transformToGantt);
-      //console.log("Gantt Data:", ganttData);
-      // Initialize the Gantt chart with the transformed data
-      new Gantt("#gantt_chart", ganttData);
-    })
-    .catch((error) => console.error("Error fetching workload data:", error));
 }
 
 function getFormData() {
@@ -47,14 +33,52 @@ function clearForm() {
   document.getElementById("submit_btn").textContent = "Add Workload";
 }
 
-//populateForm(workload) — fills the form with an existing workload's data when a Gantt bar is clicked, sets selectedWorkloadId, changes submit button text to "Update Module"
+function populateForm(workload) {
+  // function to populate form with existing workload data when a Gantt bar is clicked
+  document.getElementById("module_name").value = workload.module_name;
+  document.getElementById("academic_year").value = workload.academic_year;
+  document.getElementById("term_or_semester").value = workload.term_or_semester;
+  document.getElementById("study_type").value = workload.study_type;
+  document.getElementById("start_date").value = workload.start_date;
+  document.getElementById("end_date").value = workload.end_date;
+  document.getElementById("notes").value = workload.notes || "";
+  document.getElementById("chart_colour").value = workload.chart_colour;
+  selectedWorkloadId = workload.id;
+  document.getElementById("submit_btn").textContent = "Update Module";
+}
 
-//submitForm() — reads selectedWorkloadId to decide POST vs PUT, calls the API, then reloads the Gantt and clears the form on success
+function loadWorkLoads() {
+  // function to load workload data from the backend API, populate the cache, and initialise the Gantt chart
+  fetch("http://localhost:8000/workloads/")
+    .then((response) => response.json())
+    .then((data) => {
+      // Populate the cache with workload data
+      data.forEach((workload) => {
+        workLoadCache[workload.id] = workload;
+      });
 
-loadWorkLoads();
+      const ganttData = data.map(transformToGantt);
+      new Gantt("#gantt_chart", ganttData, {
+        on_click: (task) => {
+          const workload = workLoadCache[task.id];
+          if (workload) {
+            populateForm(workload);
+          } else {
+            console.error("Workload data not found for task id:", task.id);
+          }
+        },
+      });
 
-document
-  .getElementById("submit_btn")
-  .addEventListener("click", () => console.log(getFormData()));
+      //submitForm() — reads selectedWorkloadId to decide POST vs PUT, calls the API, then reloads the Gantt and clears the form on success
 
-document.getElementById("clear_btn").addEventListener("click", clearForm);
+      document
+        .getElementById("submit_btn")
+        .addEventListener("click", () => console.log(getFormData()));
+
+      document.getElementById("clear_btn").addEventListener("click", clearForm);
+    })
+    .catch((error) => console.error("Error fetching workloads:", error));
+}
+
+// Initialise the Gantt chart when the page loads
+document.addEventListener("DOMContentLoaded", loadWorkLoads);

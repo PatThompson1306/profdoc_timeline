@@ -28,6 +28,7 @@ function getFormData() {
 
 function clearForm() {
   // function to clear form data
+  document.getElementById("delete_btn").style.display = "none";
   document.getElementById("workload_form").reset();
   selectedWorkloadId = null;
   document.getElementById("submit_btn").textContent = "Add Workload";
@@ -45,6 +46,7 @@ function populateForm(workload) {
   document.getElementById("chart_colour").value = workload.chart_colour;
   selectedWorkloadId = workload.id;
   document.getElementById("submit_btn").textContent = "Update Module";
+  document.getElementById("delete_btn").style.display = "block";
 }
 
 function loadWorkLoads() {
@@ -54,10 +56,11 @@ function loadWorkLoads() {
     .then((data) => {
       // Populate the cache with workload data
       data.forEach((workload) => {
-        workLoadCache[workload.id] = workload;
+        workLoadCache[String(workload.id)] = workload;
       });
 
       const ganttData = data.map(transformToGantt);
+      document.getElementById("gantt_chart").innerHTML = "";
       new Gantt("#gantt_chart", ganttData, {
         on_click: (task) => {
           const workload = workLoadCache[task.id];
@@ -68,17 +71,60 @@ function loadWorkLoads() {
           }
         },
       });
-
-      //submitForm() — reads selectedWorkloadId to decide POST vs PUT, calls the API, then reloads the Gantt and clears the form on success
-
-      document
-        .getElementById("submit_btn")
-        .addEventListener("click", () => console.log(getFormData()));
-
-      document.getElementById("clear_btn").addEventListener("click", clearForm);
     })
     .catch((error) => console.error("Error fetching workloads:", error));
 }
 
+function submitForm() {
+  // function to handle form submission for adding or updating a workload
+  const formData = getFormData();
+  const url = selectedWorkloadId
+    ? `http://localhost:8000/workloads/${selectedWorkloadId}/`
+    : "http://localhost:8000/workloads/";
+  const method = selectedWorkloadId ? "PUT" : "POST";
+  fetch(url, {
+    method: method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Workload submitted successfully:", data);
+      loadWorkLoads(); // Reload the Gantt chart
+      clearForm(); // Clear the form
+    })
+    .catch((error) => console.error("Error submitting workload:", error));
+}
+
+function deleteWorkload() {
+  // function to handle deletion of a workload
+  if (!selectedWorkloadId) {
+    console.error("No workload selected for deletion.");
+    return;
+  }
+  fetch(`http://localhost:8000/workloads/${selectedWorkloadId}/`, {
+    method: "DELETE",
+  })
+    .then((response) => {
+      if (response.ok) {
+        console.log("Workload deleted successfully.");
+        loadWorkLoads(); // Reload the Gantt chart
+        clearForm(); // Clear the form
+      } else {
+        console.error("Error deleting workload.");
+      }
+    })
+    .catch((error) => console.error("Error deleting workload:", error));
+}
+
 // Initialise the Gantt chart when the page loads
-document.addEventListener("DOMContentLoaded", loadWorkLoads);
+document.addEventListener("DOMContentLoaded", () => {
+  loadWorkLoads();
+  document.getElementById("submit_btn").addEventListener("click", submitForm);
+  document.getElementById("clear_btn").addEventListener("click", clearForm);
+  document
+    .getElementById("delete_btn")
+    .addEventListener("click", deleteWorkload);
+});

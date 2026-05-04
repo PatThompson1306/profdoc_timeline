@@ -14,66 +14,80 @@
     <title>Prof Doc Timeline</title>
   </head>
   <body>
-    <h1>Timeline</h1>
+    <header id="main_header">
+      <h1>Professional Doctorate Timeline</h1>
+    </header>
 
-    <form action="" id="workload_form">
-      <!--Module Name field-->
-      <label for="module_name">Module Name:</label>
-      <input
-        type="text"
-        id="module_name"
-        name="module_name"
-        placeholder="Enter module name"
-      />
-      <!--Academic Year field-->
-      <label for="academic_year">Academic Year:</label>
-      <select id="academic_year" name="academic_year">
-        <option value="">Select academic year</option>
-        <option value="2025/2026">2025-2026</option>
-        <option value="2026/2027">2026-2027</option>
-        <option value="2027/2028">2027-2028</option>
-        <option value="2028/2029">2028-2029</option>
-        <option value="2029/2030">2029-2030</option>
-      </select>
-      <!--Term or Semester field-->
-      <label for="term_or_semester">Term or Semester:</label>
-      <select id="term_or_semester" name="term_or_semester">
-        <option value="">Select term or semester</option>
-        <option value="Semester 1">Semester 1</option>
-        <option value="Semester 2">Semester 2</option>
-      </select>
-      <!--Study Type field-->
-      <label for="study_type">Study Type:</label>
-      <select id="study_type" name="study_type">
-        <option value="">Select study type</option>
-        <option value="Academic Poster">Academic Poster</option>
-        <option value="Academic Paper">Academic Paper</option>
-        <option value="Pilot Study">Pilot Study</option>
-        <option value="Presentation">Presentation</option>
-        <option value="Thesis">Thesis</option>
-        <option value="Written Report">Written Report</option>
-      </select>
-      <!--Start Date field-->
-      <label for="start_date">Start Date:</label>
-      <input type="date" id="start_date" name="start_date" />
-      <!--End Date field-->
-      <label for="end_date">End Date:</label>
-      <input type="date" id="end_date" name="end_date" />
-      <!--Colour picker field-->
-      <label for="chart_colour">Color:</label>
-      <input
-        type="color"
-        id="chart_colour"
-        name="chart_colour"
-        value="#007bff"
-      />
-      <!--Notes field-->
-      <label for="notes">Notes:</label>
-      <textarea id="notes" name="notes" placeholder="Enter notes"></textarea>
-      <button type="button" id="submit_btn">Add Module</button>
-      <button type="button" id="clear_btn">Clear</button>
-    </form>
-
-    <div id="gantt_chart"></div>
+    <div id="main_layout">
+      <div id="form_panel">
+        <form action="" id="workload_form">
+          <!--Module Name field-->
+          <label for="module_name">Module Name:</label>
+          <input
+            type="text"
+            id="module_name"
+            name="module_name"
+            placeholder="Enter module name"
+          />
+          <!--Academic Year field-->
+          <label for="academic_year">Academic Year:</label>
+          <select id="academic_year" name="academic_year">
+            <option value="">Select academic year</option>
+            <option value="2025/2026">2025-2026</option>
+            <option value="2026/2027">2026-2027</option>
+            <option value="2027/2028">2027-2028</option>
+            <option value="2028/2029">2028-2029</option>
+            <option value="2029/2030">2029-2030</option>
+          </select>
+          <!--Term or Semester field-->
+          <label for="term_or_semester">Term or Semester:</label>
+          <select id="term_or_semester" name="term_or_semester">
+            <option value="">Select term or semester</option>
+            <option value="Semester 1">Semester 1</option>
+            <option value="Semester 2">Semester 2</option>
+          </select>
+          <!--Study Type field-->
+          <label for="study_type">Study Type:</label>
+          <select id="study_type" name="study_type">
+            <option value="">Select study type</option>
+            <option value="Academic Poster">Academic Poster</option>
+            <option value="Academic Paper">Academic Paper</option>
+            <option value="Pilot Study">Pilot Study</option>
+            <option value="Presentation">Presentation</option>
+            <option value="Thesis">Thesis</option>
+            <option value="Written Report">Written Report</option>
+          </select>
+          <!--Start Date field-->
+          <label for="start_date">Start Date:</label>
+          <input type="date" id="start_date" name="start_date" />
+          <!--End Date field-->
+          <label for="end_date">End Date:</label>
+          <input type="date" id="end_date" name="end_date" />
+          <!--Colour picker field-->
+          <label for="chart_colour">Color:</label>
+          <input
+            type="color"
+            id="chart_colour"
+            name="chart_colour"
+            value="#007bff"
+          />
+          <!--Notes field-->
+          <label for="notes">Notes:</label>
+          <textarea
+            id="notes"
+            name="notes"
+            placeholder="Enter notes"
+          ></textarea>
+          <button type="button" id="submit_btn">Add Academic Module</button>
+          <button type="button" id="clear_btn">Clear Form</button>
+          <button type="button" id="delete_btn" style="display: none">
+            Delete Academic Module
+          </button>
+        </form>
+      </div>
+      <div id="chart_panel">
+        <div id="gantt_chart"></div>
+      </div>
+    </div>
   </body>
 </html>

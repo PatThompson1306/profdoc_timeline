@@ -2,13 +2,13 @@ let selectedWorkloadId = null; // global variable to store the selected workload
 let workLoadCache = {}; // global variable to cache workload data for quick access when populating the form
 
 function transformToGantt(workload) {
-  // function to transform workload data frappe gantt chart formatted json
   return {
     id: String(workload.id),
     name: workload.module_name,
     start: workload.start_date,
     end: workload.end_date,
     progress: 0,
+    custom_class: `bar-task-${workload.id}`,
   };
 }
 
@@ -54,12 +54,29 @@ function loadWorkLoads() {
   fetch("http://localhost:8000/workloads/")
     .then((response) => response.json())
     .then((data) => {
-      // Populate the cache with workload data
       data.forEach((workload) => {
         workLoadCache[String(workload.id)] = workload;
       });
 
       const ganttData = data.map(transformToGantt);
+
+      // Inject dynamic bar colours using Frappe CSS variables
+      const oldStyle = document.getElementById("gantt_dynamic_styles");
+      if (oldStyle) oldStyle.remove();
+
+      const styleEl = document.createElement("style");
+      styleEl.id = "gantt_dynamic_styles";
+      styleEl.textContent = data
+        .map(
+          (w) => `
+          .gantt .bar-task-${w.id} {
+              --g-bar-color: ${w.chart_colour} !important;
+          }
+      `,
+        )
+        .join("");
+      document.head.appendChild(styleEl);
+
       document.getElementById("gantt_chart").innerHTML = "";
       new Gantt("#gantt_chart", ganttData, {
         on_click: (task) => {

@@ -33,6 +33,16 @@
   overflow-y: auto;
 }
 
+#form_title {
+  color: var(--gold);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--gold);
+}
+
 #chart_panel {
   flex: 1;
   background-color: var(--light-grey);
@@ -63,10 +73,6 @@
   resize: vertical;
 }
 
-#form_panel button {
-  margin-right: 8px;
-}
-
 button {
   background-color: var(--gold);
   color: var(--navy);
@@ -75,6 +81,13 @@ button {
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 4px;
+}
+
+#form_panel button {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  margin-right: 0;
 }
 
 #clear_btn {
@@ -97,4 +110,25 @@ button {
 
 .bar-progress {
   display: none;
+}
+
+#view_toggle {
+  margin-bottom: 15px;
+}
+
+#view_toggle button {
+  background-color: var(--navy);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  padding: 6px 16px;
+  margin-right: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+#view_toggle button:hover {
+  background-color: var(--gold);
+  color: var(--navy);
 }

@@ -1,7 +1,9 @@
 let selectedWorkloadId = null; // global variable to store the selected workload id
 let workLoadCache = {}; // global variable to cache workload data for quick access when populating the form
+let ganttInstance = null; // global variable to store the Gantt instance for later updates
 
 function transformToGantt(workload) {
+  // transforms a workload object from the API into Frappe Gantt task format
   return {
     id: String(workload.id),
     name: workload.module_name,
@@ -32,6 +34,7 @@ function clearForm() {
   document.getElementById("workload_form").reset();
   selectedWorkloadId = null;
   document.getElementById("submit_btn").textContent = "Add Workload";
+  document.getElementById("form_title").textContent = "Add Module";
 }
 
 function populateForm(workload) {
@@ -47,6 +50,7 @@ function populateForm(workload) {
   selectedWorkloadId = workload.id;
   document.getElementById("submit_btn").textContent = "Update Module";
   document.getElementById("delete_btn").style.display = "block";
+  document.getElementById("form_title").textContent = "Edit Module";
 }
 
 function loadWorkLoads() {
@@ -57,9 +61,7 @@ function loadWorkLoads() {
       data.forEach((workload) => {
         workLoadCache[String(workload.id)] = workload;
       });
-
       const ganttData = data.map(transformToGantt);
-
       // Inject dynamic bar colours using Frappe CSS variables
       const oldStyle = document.getElementById("gantt_dynamic_styles");
       if (oldStyle) oldStyle.remove();
@@ -76,9 +78,8 @@ function loadWorkLoads() {
         )
         .join("");
       document.head.appendChild(styleEl);
-
       document.getElementById("gantt_chart").innerHTML = "";
-      new Gantt("#gantt_chart", ganttData, {
+      ganttInstance = new Gantt("#gantt_chart", ganttData, {
         on_click: (task) => {
           const workload = workLoadCache[task.id];
           if (workload) {
@@ -144,4 +145,9 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("delete_btn")
     .addEventListener("click", deleteWorkload);
+  document.querySelectorAll("#view_toggle button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      ganttInstance.change_view_mode(btn.dataset.view);
+    });
+  });
 });

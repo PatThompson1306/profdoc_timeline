@@ -20,6 +20,7 @@
 
     <div id="main_layout">
       <div id="form_panel">
+        <h2 id="form_title">Add Module</h2>
         <form action="" id="workload_form">
           <!--Module Name field-->
           <label for="module_name">Module Name:</label>
@@ -50,8 +51,8 @@
           <label for="study_type">Study Type:</label>
           <select id="study_type" name="study_type">
             <option value="">Select study type</option>
-            <option value="Academic Poster">Academic Poster</option>
             <option value="Academic Paper">Academic Paper</option>
+            <option value="Academic Poster">Academic Poster</option>
             <option value="Pilot Study">Pilot Study</option>
             <option value="Presentation">Presentation</option>
             <option value="Thesis">Thesis</option>
@@ -86,6 +87,12 @@
         </form>
       </div>
       <div id="chart_panel">
+        <div id="view_toggle">
+          <button type="button" data-view="Day">Day</button>
+          <button type="button" data-view="Week">Week</button>
+          <button type="button" data-view="Month">Month</button>
+          <button type="button" data-view="Year">Year</button>
+        </div>
         <div id="gantt_chart"></div>
       </div>
     </div>
